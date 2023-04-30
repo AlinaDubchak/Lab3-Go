@@ -49,12 +49,22 @@ func GreenFill(t screen.Texture) {
 	t.Fill(t.Bounds(), color.RGBA{G: 0xff, A: 0xff}, screen.Src)
 }
 
+func BlackFill(t screen.Texture) {
+	t.Fill(t.Bounds(), color.Black, screen.Src)
+}
+
 type BgRectOp struct {
-	X1, Y1, X2, Y2 int
+	X1, Y1, X2, Y2, ST int
 }
 
 func (op *BgRectOp) Do(t screen.Texture) bool {
-	t.Fill(image.Rect(op.X1, op.Y1, op.X2, op.Y2), color.Black, screen.Src)
+	if op.ST == 0 {
+		t.Fill(image.Rect(op.X1, op.Y1, op.X2, op.Y2), color.Black, screen.Src)
+	} else if op.ST == 1 {
+		t.Fill(image.Rect(op.X1, op.Y1, op.X2, op.Y2), color.White, screen.Src)
+	} else if op.ST == 2 {
+		t.Fill(image.Rect(op.X1, op.Y1, op.X2, op.Y2), color.RGBA{G: 0xff, A: 0xff}, screen.Src)
+	}
 	return false
 }
 
@@ -69,9 +79,9 @@ func (op *FigureOp) Do(t screen.Texture) bool {
 
 	rect2 := image.Rect(op.X-50, op.Y-100, op.X+50, op.Y+100)
 	t.Fill(rect2, op.C, draw.Src)
-	
+
 	return false
-	}
+}
 
 type MoveOp struct {
 	X, Y    int
@@ -89,4 +99,11 @@ func (op *MoveOp) Do(t screen.Texture) bool {
 
 func Reset(t screen.Texture) {
 	t.Fill(t.Bounds(), color.Black, draw.Src)
+}
+
+func ResetWhite(t screen.Texture) {
+	t.Fill(t.Bounds(), color.White, draw.Src)
+}
+func ResetGreen(t screen.Texture) {
+	t.Fill(t.Bounds(), color.RGBA{G: 0xff, A: 0xff}, draw.Src)
 }
